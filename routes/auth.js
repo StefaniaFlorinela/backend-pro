@@ -591,16 +591,15 @@ router.patch('/update', auth, upload.single('avatar'), async (req, res, next) =>
         if (name) {
             user.name = name;
         }
+        if(password) {
+            user.password = password;
+        }
 
         if (email) {
             const existingUser = await User.findOne({ email });
             if (existingUser)
                 return res.status(401).json({ message: 'Email already registered!' });
             user.email = email;
-        }
-
-        if (password) {
-            await password.setPassword(password);
         }
 
         await user.save();
