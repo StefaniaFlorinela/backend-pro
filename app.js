@@ -3,7 +3,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const passport = require('passport');
 require('./config/passport')(passport);
-const { specs, swaggerUi } = require('./services/swagger');
 const path = require('path');
 
 const app = express();
@@ -14,7 +13,6 @@ app.use(passport.initialize());
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 app.use(morgan(formatsLogger));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 const authRouter = require('./routes/auth');

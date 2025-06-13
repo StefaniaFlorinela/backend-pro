@@ -34,7 +34,6 @@ const loginSchema = Joi.object({
 });
 
 const backgroundSchema = Joi.object({
-    // allow(null) - Permitem ca valoarea sa fie si null - permite campului sa fie gol sau sa nu aiba o imagine de fundal setata
     backgroundImage: Joi.string().allow(null).optional().messages({
         'string.base': '{{#label}} trebuie să fie un șir de caractere',
         'any.allowOnly': '{{#label}} poate fi null sau un string valid',

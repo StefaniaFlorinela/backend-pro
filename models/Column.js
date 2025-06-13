@@ -4,7 +4,6 @@ let Card = require('./Card');
 const columnSchema = new mongoose.Schema({
     name: {
         type: String,
-        // enum: ['To Do', 'In Progress', 'Done'],
         default: 'To Do',
         required: true
     },

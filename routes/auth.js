@@ -8,478 +8,6 @@ require('dotenv').config();
 const gravatar = require('gravatar');
 const upload = require('../services/cloudinary');
 
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     User:
- *       type: object
- *       properties:
- *         name:
- *           type: string
- *           example: Popescu Andrei
- *         email:
- *           type: string
- *           example: popescu.andrei@example.com
- *         password:
- *           type: string
- *           example: securepassword
- *         avatarURL:
- *           type: string
- *           example: http://example.com/avatar.jpg
- *         theme:
- *           type: string
- *           enum: [light, dark, violet]
- *           default: dark
- *         backgroundImage:
- *           type: string
- *           example: bg_tablet15@1x.png
- *     Token:
- *       type: object
- *       properties:
- *         token:
- *           type: string
- */
-
-/**
- * @swagger
- * /api/auth/register:
- *   post:
- *     summary: Register a new user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: Popescu Andrei
- *               email:
- *                 type: string
- *                 example: popescu.andrei@example.com
- *               password:
- *                 type: string
- *                 example: securepassword
- *     responses:
- *       201:
- *         description: User successfully registered
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Successful registration!
- *                 user:
- *                   type: object
- *                   properties:
- *                     name:
- *                       type: string
- *                       example: Popescu Andrei
- *                     email:
- *                       type: string
- *                       example: popescu.andrei@example.com
- *                     avatarURL:
- *                       type: string
- *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
- *       409:
- *         description: Email already registered
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Email already registered!
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Internal Server Error
- */
-
-/**
- * @swagger
- * /api/auth/login:
- *   post:
- *     summary: Login a user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 example: popescu.andrei@example.com
- *               password:
- *                 type: string
- *                 example: securepassword
- *     responses:
- *       200:
- *         description: User logged in successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Welcome Popescu Andrei
- *                 user:
- *                   type: object
- *                   properties:
- *                     name:
- *                       type: string
- *                       example: Popescu Andrei
- *                     email:
- *                       type: string
- *                       example: popescu.andrei@example.com
- *                     avatarURL:
- *                       type: string
- *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
- *                 token:
- *                   type: string
- *       409:
- *         description: Email already registered
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Email already registered!
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Internal Server Error
- */
-
-/**
- * @swagger
- * /api/auth/current:
- *   get:
- *     summary: Get current user info
- *     tags: [Auth]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Current user info
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 user:
- *                   type: object
- *                   properties:
- *                     name:
- *                       type: string
- *                       example: Popescu Andrei
- *                     avatarURL:
- *                       type: string
- *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
- *                     theme:
- *                       type: string
- *                       example: dark
- *       401:
- *         description: Not authorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Not authorized
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Internal Server Error
- */
-
-/**
- * @swagger
- * /api/auth/update:
- *   patch:
- *     summary: Update user profile
- *     tags: [Auth]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: Popescu David
- *               email:
- *                 type: string
- *                 example: popescu.david@example.com
- *               password:
- *                 type: string
- *                 example: newsecurepassword
- *               avatar:
- *                 type: string
- *                 example: andrei.png  
- *     responses:
- *       200:
- *         description: User data updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Successfully data updated!
- *                 update:
- *                   type: object
- *                   properties:
- *                     name:
- *                       type: string
- *                       example: Popescu David
- *                     email:
- *                       type: string
- *                       example: popescu.david@example.com
- *                     avatarURL:
- *                       type: string
- *                       example: https://res.cloudinary.com/dnz7pbr52/image/upload/v1727929062/user_avatars/wp6dgvm9o8jvpstiob5z.jpg
- *       401:
- *         description: Not authorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Not authorized
- *       409:
- *         description: Email already registered
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Email already registered!
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Internal Server Error
- */
-
-
-/**
- * @swagger
- * /api/auth/change-theme:
- *   patch:
- *     summary: Change user theme
- *     tags: [Auth]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               theme:
- *                 type: string
- *                 example: violet
- * 
- *     responses:
- *       200:
- *         description: Theme updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Theme updated successfully
- *                 owner:
- *                   type: string
- *                   example: 66f793577cca6a8880257790
- *                 theme:
- *                   type: string
- *                   example: violet
- *       401:
- *         description: Not authorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Not authorized
- *       400:
- *         description: Invalid theme
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Invalid theme
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Internal Server Error
- */
-
-/**
- * @swagger
- * /api/auth/logout:
- *   get:
- *     summary: Logout user
- *     tags: [Auth]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Successfully logged out
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Successfully logged out
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Internal Server Error
- */
-
-/**
- * @swagger
- * /api/auth/users/{userId}/set-background:
- *   patch:
- *     summary: Set a background image for the user
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the user
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               backgroundImage:
- *                 type: string
- *                 example: bg_desktop1@1x.png
- *     responses:
- *       200:
- *         description: Successfully set up background image
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Successfully setup background image!
- *                 backgroundImage:
- *                   type: string
- *                   example: /images/bg_desktop1@1x.png
- *       401:
- *         description: Not authorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Not authorized
- *       404:
- *         description: User not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: User not found
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Internal Server Error
- */
-
-
-// REGISTER
-
 router.post('/register', validateRegistration, async (req, res, next) => {
     try {
 
@@ -515,7 +43,6 @@ router.post('/register', validateRegistration, async (req, res, next) => {
     }
 });
 
-// LOGIN 
 
 router.post('/login', validateLogIn, async (req, res, next) => {
     try {
@@ -555,7 +82,6 @@ router.post('/login', validateLogIn, async (req, res, next) => {
     }
 });
 
-// CURRENT USER
 
 router.get('/current', auth, async (req, res, next) => {
     try {
@@ -575,7 +101,6 @@ router.get('/current', auth, async (req, res, next) => {
     }
 });
 
-// UPDATE USER
 
 router.patch('/update', auth, upload.single('avatar'), async (req, res, next) => {
     try {
@@ -619,7 +144,6 @@ router.patch('/update', auth, upload.single('avatar'), async (req, res, next) =>
     }
 })
 
-// CHANGE THEME
 
 router.patch('/change-theme', auth, async (req, res, next) => {
     try {
@@ -633,11 +157,6 @@ router.patch('/change-theme', auth, async (req, res, next) => {
         if (themeIndex === -1) {
             return res.status(400).json({ message: 'Invalid theme' });
         }
-
-        // if (!availableThemes.includes(theme)) {
-        //     return res.status(400).json({ message: 'Invalid theme' });
-        // }
-
         const user = req.user;
         user.theme = availableThemes[themeIndex];
 
@@ -655,7 +174,7 @@ router.patch('/change-theme', auth, async (req, res, next) => {
     }
 });
 
-// LOGOUT
+
 
 router.get('/logout', auth, async (req, res, next) => {
     try {
@@ -672,7 +191,7 @@ router.get('/logout', auth, async (req, res, next) => {
     }
 })
 
-// SET BACKROUND
+
 router.patch('/users/:userId/set-background', auth, validateBackgroundImage, async (req, res) => {
     try {
         const { userId } = req.params;

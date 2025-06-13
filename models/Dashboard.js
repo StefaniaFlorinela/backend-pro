@@ -26,21 +26,12 @@ const dashboardSchema = new mongoose.Schema({
     versionKey: false
 });
 
-/* dashboardSchema.pre('deleteOne', async function (next) {
-    await Column.deleteMany({ _id: { $in: this.columns } });
-    next();
-}); */
-
 dashboardSchema.index({ owner: 1, slug: 1 }, { name: 'owner_slug', unique: true });
 
 dashboardSchema.plugin(sluggerPlugin, {
-    // the property path which stores the slug value
     slugPath: 'slug',
-    // specify the properties which will be used for generating the slug
     generateFrom: ['name'],
-    // specify the max length for the slug
     maxLength: 15,
-    // the unique index, see above
     index: 'owner_slug',
 });
 

@@ -34,24 +34,15 @@ module.exports = {
             'string.base': '{{#label}} should be a type of text',
             'any.required': '{{#label}} is required'
         }),
-        /* cards: Joi.array().items(ObjectId).messages({
-            'array.base': '{{#label}} should be an array'
-        }) */
     }),
 
     dashboardSchema: Joi.object({
-        // owner: ObjectId,
         name: Joi.string().required().messages({
             'string.base': '{{#label}} should be a type of text',
             'any.required': '{{#label}} is required'
         }),
-        // slug: Joi.string(),
 
         icon: Joi.string(),
         backgroundImage: Joi.string(),
-
-        /* columns: Joi.array().items(ObjectId).messages({
-            'array.base': '{{#label}} should be an array'
-        }) */
     }),
 }
